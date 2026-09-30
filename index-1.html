@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HallBook — Function Hall Booking</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f7fb;color:#172033;line-height:1.5}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font:inherit}
+.nav{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e8eaf0;padding:15px 6%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:24px;font-weight:800;color:#5b4bdb}.logo span{color:#ff7a59}
+.navlinks{display:flex;gap:24px}.navlinks a{font-weight:600;color:#4b5563}.navlinks a:hover{color:#5b4bdb}
+.hero{padding:70px 6%;background:linear-gradient(135deg,#5b4bdb,#8b7cf6);color:#fff}
+.hero-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:1.3fr .7fr;gap:35px;align-items:center}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.05;margin-bottom:18px}.hero p{font-size:18px;opacity:.92;margin-bottom:28px}
+.btn{border:0;border-radius:10px;padding:12px 20px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-primary{background:#ff7a59;color:#fff}.btn-primary:hover{transform:translateY(-2px)}
+.btn-light{background:#fff;color:#4b3cc4}.hero-card{background:#ffffff18;border:1px solid #ffffff35;border-radius:20px;padding:25px;backdrop-filter:blur(10px)}
+.hero-card strong{font-size:38px;display:block}.hero-card div{padding:12px 0;border-bottom:1px solid #ffffff30}.hero-card div:last-child{border:0}
+section{padding:55px 6%}.container{max-width:1100px;margin:auto}.section-title{text-align:center;margin-bottom:30px}.section-title h2{font-size:34px}.section-title p{color:#667085}
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+input,select,textarea{width:100%;border:1px solid #d8dce5;border-radius:9px;padding:12px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#5b4bdb;box-shadow:0 0 0 3px #5b4bdb18}
+.filters input{flex:2;min-width:220px}.filters select{flex:1;min-width:170px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid #e8eaf0;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px #1018280a}
+.card-img{height:170px;background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:12px}
+.badge{background:#16a34a;color:#fff;border-radius:20px;padding:6px 10px;font-size:12px;font-weight:700}
+.card-body{padding:18px}.card-body h3{margin-bottom:6px}.muted{color:#667085;font-size:14px}
+.price{font-size:20px;font-weight:800;color:#5b4bdb;margin:13px 0}.card-actions{display:flex;gap:8px}.card-actions button{flex:1}
+.booking{background:#fff;border:1px solid #e8eaf0;border-radius:18px;padding:28px;box-shadow:0 8px 25px #1018280a}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.full{grid-column:1/-1}.label{display:block;font-weight:700;margin-bottom:6px}
+.confirm{display:none;margin-top:20px;padding:18px;border-radius:12px;background:#ecfdf3;border:1px solid #a7f3d0;color:#065f46}
+.confirm.show{display:block}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.feature{background:#fff;border-radius:14px;padding:22px;text-align:center;border:1px solid #e8eaf0}.feature .icon{font-size:30px;margin-bottom:8px}
+footer{background:#111827;color:#cbd5e1;padding:30px 6%;text-align:center}
+.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:14px 18px;border-radius:10px;display:none;z-index:50}.toast.show{display:block}
+@media(max-width:850px){.hero-inner{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.features{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.nav{padding:13px 4%}.navlinks{display:none}.hero,section{padding:42px 4%}.grid,.features,.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.hero h1{font-size:42px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="#home">Hall<span>Book</span></a>
+  <div class="navlinks">
+    <a href="#home">Home</a><a href="#halls">Halls</a><a href="#booking">Book Now</a><a href="#contact">Contact</a>
+  </div>
+  <a class="btn btn-primary" href="#booking">Book a Hall</a>
+</nav>
+
+<header class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <h1>Find the perfect function hall.</h1>
+      <p>Discover halls for weddings, receptions, birthdays, conferences and every special occasion.</p>
+      <a class="btn btn-primary" href="#halls">Explore Halls</a>
+      <a class="btn btn-light" href="#booking" style="margin-left:8px">Check Availability</a>
+    </div>
+    <div class="hero-card">
+      <div><strong>25+</strong> Premium halls</div>
+      <div><strong>500+</strong> Successful events</div>
+      <div><strong>24/7</strong> Booking requests</div>
+    </div>
+  </div>
+</header>
+
+<section id="halls">
+  <div class="container">
+    <div class="section-title"><h2>Available Function Halls</h2><p>Search by name, location or capacity.</p></div>
+    <div class="filters">
+      <input id="search" placeholder="🔎 Search hall or location...">
+      <select id="capacityFilter"><option value="">Any capacity</option><option value="100">100+ guests</option><option value="250">250+ guests</option><option value="500">500+ guests</option></select>
+      <select id="typeFilter"><option value="">All types</option><option>Wedding</option><option>Conference</option><option>Party</option></select>
+    </div>
+    <div class="grid" id="hallGrid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-title"><h2>Why HallBook?</h2></div>
+    <div class="features">
+      <div class="feature"><div class="icon">📅</div><h3>Easy Booking</h3><p class="muted">Choose a hall and date in minutes.</p></div>
+      <div class="feature"><div class="icon">🔎</div><h3>Compare Halls</h3><p class="muted">View capacity, location and pricing.</p></div>
+      <div class="feature"><div class="icon">✅</div><h3>Instant Confirmation</h3><p class="muted">Get your booking reference instantly.</p></div>
+      <div class="feature"><div class="icon">📱</div><h3>Responsive</h3><p class="muted">Works on mobile, tablet and desktop.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="container">
+    <div class="section-title"><h2>Book Your Function Hall</h2><p>Fill in your details and submit a booking request.</p></div>
+    <div class="booking">
+      <form id="bookingForm">
+        <div class="form-grid">
+          <div><label class="label">Customer Name *</label><input id="name" required placeholder="Enter your name"></div>
+          <div><label class="label">Phone Number *</label><input id="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number"></div>
+          <div><label class="label">Email *</label><input id="email" type="email" required placeholder="you@example.com"></div>
+          <div><label class="label">Select Hall *</label><select id="hall" required><option value="">Choose a hall</option></select></div>
+          <div><label class="label">Booking Date *</label><input id="date" type="date" required></div>
+          <div><label class="label">Number of Guests *</label><input id="guests" type="number" min="1" required placeholder="e.g. 250"></div>
+          <div class="full"><label class="label">Event Type *</label><select id="event" required><option value="">Choose event type</option><option>Wedding</option><option>Reception</option><option>Birthday Party</option><option>Conference</option><option>Other</option></select></div>
+          <div class="full"><label class="label">Additional Requirements</label><textarea id="notes" rows="4" placeholder="Decoration, catering, parking, etc."></textarea></div>
+          <div class="full"><button class="btn btn-primary" type="submit">Confirm Booking</button></div>
+        </div>
+      </form>
+      <div class="confirm" id="confirmation"></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-title"><h2>Contact</h2><p>For support, call us or send an email.</p></div>
+    <div class="booking" style="text-align:center">
+      <p>📞 <strong>+91 98765 43210</strong> &nbsp; | &nbsp; ✉️ <strong>book@hallbook.example</strong></p>
+      <p class="muted" style="margin-top:8px">Demo application — connect this frontend to Java Spring Boot + MySQL for real online bookings.</p>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 HallBook — Function Hall Booking Application</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const halls = [
+  {id:1,name:"Royal Grand Convention Hall",location:"Tirupati",capacity:800,price:45000,type:"Wedding",img:"https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=900&q=80"},
+  {id:2,name:"Green Palace Function Hall",location:"Chittoor",capacity:500,price:30000,type:"Wedding",img:"https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=900&q=80"},
+  {id:3,name:"City Star Banquet",location:"Tirupati",capacity:300,price:22000,type:"Party",img:"https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=900&q=80"},
+  {id:4,name:"Business Meet Convention",location:"Renigunta",capacity:250,price:18000,type:"Conference",img:"https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80"},
+  {id:5,name:"Sri Lakshmi Celebration Hall",location:"Tirupati",capacity:600,price:35000,type:"Wedding",img:"https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&w=900&q=80"},
+  {id:6,name:"Sunrise Party Hall",location:"Chandragiri",capacity:180,price:15000,type:"Party",img:"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80"}
+];
+
+const grid=document.getElementById("hallGrid");
+const hallSelect=document.getElementById("hall");
+const search=document.getElementById("search");
+const capacity=document.getElementById("capacityFilter");
+const type=document.getElementById("typeFilter");
+const date=document.getElementById("date");
+
+date.min=new Date().toISOString().split("T")[0];
+
+function money(n){return "₹"+n.toLocaleString("en-IN");}
+function render(){
+  const q=search.value.toLowerCase(), cap=Number(capacity.value)||0, t=type.value;
+  const list=halls.filter(h=>(h.name+" "+h.location).toLowerCase().includes(q)&&h.capacity>=cap&&(!t||h.type===t));
+  grid.innerHTML=list.length?list.map(h=>`
+    <article class="card">
+      <div class="card-img" style="background-image:url('${h.img}')"><span class="badge">Available</span></div>
+      <div class="card-body">
+        <h3>${h.name}</h3><p class="muted">📍 ${h.location} · 👥 ${h.capacity} guests</p>
+        <div class="price">${money(h.price)} <span class="muted">/ event</span></div>
+        <div class="card-actions">
+          <button class="btn btn-primary" onclick="selectHall(${h.id})">Book Now</button>
+          <button class="btn" style="background:#eef0ff;color:#4b3cc4" onclick="showDetails(${h.id})">Details</button>
+        </div>
+      </div>
+    </article>`).join(""):"<p>No halls match your search.</p>";
+}
+function fillHalls(){
+  hallSelect.innerHTML='<option value="">Choose a hall</option>'+halls.map(h=>`<option value="${h.id}">${h.name} — ${money(h.price)}</option>`).join("");
+}
+function selectHall(id){hallSelect.value=id;document.getElementById("booking").scrollIntoView({behavior:"smooth"});}
+function showDetails(id){
+  const h=halls.find(x=>x.id===id);
+  alert(`${h.name}\n\nLocation: ${h.location}\nCapacity: ${h.capacity} guests\nType: ${h.type}\nPrice: ${money(h.price)} per event\n\nThis demo hall is available for booking.`);
+}
+[search,capacity,type].forEach(x=>x.addEventListener("input",render));
+
+document.getElementById("bookingForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const selected=halls.find(h=>h.id==hallSelect.value);
+  const booking={
+    ref:"HB"+Date.now().toString().slice(-7),
+    name:document.getElementById("name").value,
+    phone:document.getElementById("phone").value,
+    email:document.getElementById("email").value,
+    hall:selected.name,
+    date:date.value,
+    guests:document.getElementById("guests").value,
+    event:document.getElementById("event").value,
+    notes:document.getElementById("notes").value
+  };
+  const saved=JSON.parse(localStorage.getItem("hallBookings")||"[]");
+  saved.push(booking);localStorage.setItem("hallBookings",JSON.stringify(saved));
+  document.getElementById("confirmation").innerHTML=`<strong>🎉 Booking request submitted!</strong><br>Reference: <strong>${booking.ref}</strong><br>Hall: ${booking.hall}<br>Date: ${booking.date}<br>Customer: ${booking.name}<br><br>This prototype saves the booking in your browser. A real application should send it to a Java/Spring Boot backend and MySQL database.`;
+  document.getElementById("confirmation").classList.add("show");
+  document.getElementById("bookingForm").reset();
+  date.min=new Date().toISOString().split("T")[0];
+  toast("Booking submitted successfully!");
+});
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)}
+fillHalls();render();
+</script>
+</body>
+</html>
